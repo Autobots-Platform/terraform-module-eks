@@ -1,0 +1,69 @@
+# Pre-commit hooks for code quality, security, and consistency
+# Install: pip install pre-commit && pre-commit install
+# Run: pre-commit run --all-files
+
+repos:
+  # Terraform formatting and validation
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^(\.terraform/|\.git/)
+      - id: end-of-file-fixer
+        exclude: ^(\.terraform/|\.git/)
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ["--maxkb=500"]
+      - id: check-case-conflict
+
+  # Terraform linting with tflint
+  - repo: https://github.com/terraform-linters/pre-commit-terraform
+    rev: v1.86.0
+    hooks:
+      - id: terraform_fmt
+        args:
+          - "--args=-recursive"
+      - id: terraform_validate
+      - id: terraform_tflint
+        args:
+          - "--args=--format=compact"
+      - id: terraform_trivy
+        args:
+          - "--args=--format=sarif --exit-code=0"
+      - id: terraform_docs
+        args:
+          - "--args=--sort-inputs-by-required"
+
+  # Security scanning
+  - repo: https://github.com/aquasecurity/trivy-action
+    rev: master
+    hooks:
+      - id: trivy
+
+  # YAML validation and linting
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.33.0
+    hooks:
+      - id: yamllint
+        args: [--strict, -d, "{extends: default, rules: {line-length: {max: 120}}}"]
+        types: [yaml]
+
+  # Markdown linting
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.37.0
+    hooks:
+      - id: markdownlint
+        args: [--fix]
+
+# Global exclusions
+exclude: |
+  (?x)^(
+    \.terraform/|
+    \.git/|
+    \.github/|
+    \.gitignore|
+    terraform\.tfstate.*|
+    \.terraform\.lock\.hcl
+  )$
