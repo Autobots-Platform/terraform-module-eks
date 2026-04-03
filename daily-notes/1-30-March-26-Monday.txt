@@ -1,0 +1,14 @@
+1.Account-types---
+                |
+                |
+                |---- Hub (Master Account)
+                |---- Slave (workload Account)-|
+                                               |-Dev    -|
+                                               |-Stage. -|---This is where app team 
+                                               |-Prod   -|.  keeps their code
+
+2. We are going to use the helm-release to deploy the ArgoCD itself using -> GITHUB ACTIONS
+3. We need have ECR in place to keep the images/helm charts
+4. Additional Links - https://github.com/argoproj/argo-helm
+                    - https://github.com/argoproj/argo-helm/discussions/1886
+                    
